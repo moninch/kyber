@@ -6,6 +6,7 @@ from sqlalchemy import pool
 
 from alembic import context
 from app.users.models import Users #noqa
+from app.posts.models import Posts #noqa
 from app.database import Base
 from app.config import settings
 

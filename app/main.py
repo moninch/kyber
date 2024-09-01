@@ -12,6 +12,7 @@ from fastapi_cache.decorator import cache
 from redis import asyncio as aioredis
 
 from app.users.router import router as router_users
+from app.posts.router import router as router_posts
 from app.config import settings
 from app.database import engine
 
@@ -25,6 +26,7 @@ async def lifespan(_: FastAPI) -> AsyncIterator[None]:
 app = FastAPI(lifespan=lifespan)
 
 app.include_router(router_users)
+app.include_router(router_posts)
 
 
 origins = [

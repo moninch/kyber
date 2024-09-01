@@ -7,7 +7,7 @@ UserAlreadyExistsException = HTTPException(
 
 IncorrectloginOrPasswordException = HTTPException(
     status_code= status.HTTP_401_UNAUTHORIZED,
-    detail="Неправильная почта или пароль"
+    detail="Неправильная логин или пароль"
                                                   )
 
 TokenExpireException = HTTPException(
@@ -22,7 +22,6 @@ UserIsNotPresentException = HTTPException(
     status_code=status.HTTP_401_UNAUTHORIZED,
     )
 
-RoomCanNotBeBookedException = HTTPException(
-    status_code=status.HTTP_409_CONFLICT,
-    detail= "Не осталось свободных номеров"
-    )
+PostNotCreatedException = HTTPException(status_code=status.HTTP_404_NOT_FOUND
+                                     ,detail='Пост не был создан')
+
