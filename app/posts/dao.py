@@ -2,6 +2,7 @@ from fastapi import HTTPException
 from sqlalchemy import delete
 from app.dao.base import BaseDAO
 
+from app.exceptions import PostNotFoundException
 from app.posts.models import Posts
 
 from app.database import async_session_maker
@@ -18,4 +19,4 @@ class PostsDAO(BaseDAO):
             await session.commit()
 
             if result.rowcount == 0:
-                raise HTTPException(status_code=404, detail="Post not found")
+                raise PostNotFoundException

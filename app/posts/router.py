@@ -3,7 +3,7 @@ from typing import Literal
 from fastapi import APIRouter, Depends, HTTPException,status
 from pydantic import TypeAdapter
 
-from app.exceptions import PostNotCreatedException, UserAlreadyExistsException
+from app.exceptions import PostNotCreatedException, PostNotFoundException, UserAlreadyExistsException, UserIsNotPresentException
 from app.posts.dao import PostsDAO
 from app.posts.schemas import SPost
 from app.users.auth import password_get_hash
@@ -16,7 +16,7 @@ router = APIRouter(
     tags = ["Публикации"]
 )
 
-#Добавление публикации
+
 @router.post("/add_post")
 async def create_post( 
     title: str,
@@ -26,29 +26,32 @@ async def create_post(
     await PostsDAO.add(title = title, content=content,author_id = user.id,category = category)
     
 
-#Чтобы чел мог посмотреть посты пользователя
+#Просмотр всех постов пользователя
 @router.get('/user/{author_id}')
 async def get_posts_by_user(author_id: int):
     return await PostsDAO.find_all(author_id = author_id)
 
+#Просмотр вообще всех постов
 @router.get('/all')
 async def get_all_posts():
     return await PostsDAO.find_all()
 
+#Просмотр постов по категории
 @router.get('/category/{category}')
 async def get_all_posts_by_category(category: Literal["rome", "garrysmod"]):
     return await PostsDAO.find_all(category = category)
 
+#Удаление поста по его айди
 @router.delete("/{post_id}")
 async def delete_bookings(post_id: int, user: Users = Depends(get_current_user)):
     post = await PostsDAO.find_by_id(post_id)
 
     if post is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Post not found")
+        raise PostNotFoundException
 
     # Проверяем, является ли текущий пользователь владельцем поста
     if post.author_id != user.id:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not authorized to delete this post")
+        raise UserIsNotPresentException
     
     await PostsDAO.delete_model(post_id)
 

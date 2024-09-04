@@ -20,8 +20,11 @@ TokenAbsentException = HTTPException(status_code=status.HTTP_401_UNAUTHORIZED
 
 UserIsNotPresentException = HTTPException(
     status_code=status.HTTP_401_UNAUTHORIZED,
+    detail='Пользователь не авторизован'
     )
 
 PostNotCreatedException = HTTPException(status_code=status.HTTP_404_NOT_FOUND
                                      ,detail='Пост не был создан')
+
+PostNotFoundException = HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Пост не найден")
 

@@ -11,7 +11,7 @@ class Posts(Base):
     content = Column(Text, nullable=False)
     author_id = Column(Integer, ForeignKey('users.id'), nullable=False)
     category = Column(String(255), nullable=False)
-    created_at = Column(DateTime, default=datetime.utcnow)  # Используем DateTime и функцию utcnow
+    created_at = Column(DateTime, default=datetime.utcnow)  
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     author = relationship('Users', back_populates='posts')

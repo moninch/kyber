@@ -13,6 +13,7 @@ from redis import asyncio as aioredis
 
 from app.users.router import router as router_users
 from app.posts.router import router as router_posts
+from app.images.router import router as router_images
 from app.config import settings
 from app.database import engine
 
@@ -27,7 +28,7 @@ app = FastAPI(lifespan=lifespan)
 
 app.include_router(router_users)
 app.include_router(router_posts)
-
+app.include_router(router_images)
 
 origins = [
     "http://localhost.tiangolo.com",
