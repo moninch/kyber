@@ -15,3 +15,6 @@ class Posts(Base):
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     author = relationship('Users', back_populates='posts')
+
+    def __str__(self) -> str:
+        return f"Post {self.title}"

@@ -10,13 +10,15 @@ from fastapi_cache import FastAPICache
 from fastapi_cache.backends.redis import RedisBackend
 from fastapi_cache.decorator import cache
 from redis import asyncio as aioredis
+from sqladmin import Admin
 
+from app.admin.views import PostsAdmin, UsersAdmin
 from app.users.router import router as router_users
 from app.posts.router import router as router_posts
 from app.images.router import router as router_images
 from app.config import settings
 from app.database import engine
-
+from app.admin.auth import authentication_backend
 
 @asynccontextmanager
 async def lifespan(_: FastAPI) -> AsyncIterator[None]:
@@ -47,3 +49,7 @@ app.add_middleware(
                    "Authorization"],
 )
 
+admin = Admin(app, engine, authentication_backend = authentication_backend)
+
+admin.add_view(UsersAdmin)
+admin.add_view(PostsAdmin)

@@ -11,3 +11,6 @@ class Users(Base):
     hashed_password = Column(String,nullable= False)
 
     posts = relationship('Posts', back_populates='author')
+
+    def __str__(self) -> str:
+        return f"Пользователь {self.login}"

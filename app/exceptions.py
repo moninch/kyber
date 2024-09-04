@@ -16,7 +16,7 @@ TokenExpireException = HTTPException(
     )
 
 TokenAbsentException = HTTPException(status_code=status.HTTP_401_UNAUTHORIZED
-                                     ,detail='Токена истек')
+                                     ,detail='Пользователь не авторизован')
 
 UserIsNotPresentException = HTTPException(
     status_code=status.HTTP_401_UNAUTHORIZED,
