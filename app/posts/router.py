@@ -41,10 +41,14 @@ async def create_post(
 async def get_posts_by_user(author_id: int):
     return await PostsDAO.find_all(author_id=author_id)
 
+@router.get("/my_posts")
+@cache(expire=60)
+async def get_my_posts(current_user: Users = Depends(get_current_user)):
+    return await PostsDAO.find_all(author_id=current_user.id)
 
 # Просмотр вообще всех постов
 @router.get("/all")
-@cache(expire=30)
+@cache(expire=60)
 async def get_all_posts():
     return await PostsDAO.find_all()
 
@@ -67,5 +71,5 @@ async def delete_bookings(post_id: int, user: Users = Depends(get_current_user))
     if post.author_id != user.id:
         raise TokenAbsent
 
-    await PostsDAO.delete_model(post_id)
+    await PostsDAO.delete_by_id(post_id)
 
