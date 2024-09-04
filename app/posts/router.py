@@ -5,10 +5,10 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import TypeAdapter
 
 from app.exceptions import (
-    PostNotCreatedException,
-    PostNotFoundException,
-    UserAlreadyExistsException,
-    UserIsNotPresentException,
+    PostNotCreated,
+    PostNotFound,
+    UserAlreadyExists,
+    TokenAbsent,
 )
 from app.posts.dao import PostsDAO
 from app.posts.schemas import SPost
@@ -61,11 +61,11 @@ async def delete_bookings(post_id: int, user: Users = Depends(get_current_user))
     post = await PostsDAO.find_by_id(post_id)
 
     if post is None:
-        raise PostNotFoundException
+        raise PostNotFound
 
     # Проверяем, является ли текущий пользователь владельцем поста
     if post.author_id != user.id:
-        raise UserIsNotPresentException
+        raise TokenAbsent
 
     await PostsDAO.delete_model(post_id)
 

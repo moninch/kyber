@@ -1,30 +1,29 @@
 from fastapi import HTTPException, Response, status
 
-UserAlreadyExistsException = HTTPException(
-    status_code= status.HTTP_409_CONFLICT,
-    detail= 'Пользователь уже зарегистрирован'
-)
+class UserAlreadyExists(HTTPException):
+    detail = "User already exists"
+    status_code = status.HTTP_409_CONFLICT
 
-IncorrectloginOrPasswordException = HTTPException(
-    status_code= status.HTTP_401_UNAUTHORIZED,
-    detail="Неправильная логин или пароль"
-                                                  )
+class IncorrectLoginOrPassword(HTTPException):
+    detail = "Incorrect login or password"
+    status_code = status.HTTP_401_UNAUTHORIZED
 
-TokenExpireException = HTTPException(
-    status_code=status.HTTP_401_UNAUTHORIZED,
-    detail='Срок действия токена истек'
-    )
+class TokenExpired(HTTPException):
+    detail = "Token expired"
+    status_code = status.HTTP_401_UNAUTHORIZED
 
-TokenAbsentException = HTTPException(status_code=status.HTTP_401_UNAUTHORIZED
-                                     ,detail='Пользователь не авторизован')
+class TokenAbsent(HTTPException):
+    detail = "User is not authorized"
+    status_code = status.HTTP_401_UNAUTHORIZED
 
-UserIsNotPresentException = HTTPException(
-    status_code=status.HTTP_401_UNAUTHORIZED,
-    detail='Пользователь не авторизован'
-    )
+class UserNotFound(HTTPException):
+    detail = "User not found"
+    status_code = status.HTTP_404_NOT_FOUND
 
-PostNotCreatedException = HTTPException(status_code=status.HTTP_404_NOT_FOUND
-                                     ,detail='Пост не был создан')
+class PostNotCreated(HTTPException):
+    detail = "Post not created"
+    status_code = status.HTTP_404_NOT_FOUND
 
-PostNotFoundException = HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Пост не найден")
-
+class PostNotFound(HTTPException):
+    detail = "Post not found"
+    status_code = status.HTTP_404_NOT_FOUND
