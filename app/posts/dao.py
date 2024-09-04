@@ -12,9 +12,11 @@ class PostsDAO(BaseDAO):
     model = Posts
 
     @classmethod
-    async def delete_model(cls, post_id: int) -> None:
+    async def delete_by_id(cls, post_id: int) -> None:
+
         async with async_session_maker() as session:
             query = delete(cls.model).where(cls.model.id == post_id)
+
             result = await session.execute(query)
             await session.commit()
 

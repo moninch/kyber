@@ -20,11 +20,13 @@ from app.config import settings
 from app.database import engine
 from app.admin.auth import authentication_backend
 
+
 @asynccontextmanager
 async def lifespan(_: FastAPI) -> AsyncIterator[None]:
     redis = aioredis.from_url(f"redis://{settings.REDIS_HOST}:{settings.REDIS_PORT}")
     FastAPICache.init(RedisBackend(redis), prefix="cache")
     yield
+
 
 app = FastAPI(lifespan=lifespan)
 
@@ -43,13 +45,18 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["GET","POST","OPTIONS","DELETE","PATCH","PUT"],
-    allow_headers=["Content-Type", "Set-Cookie", "Access-Control-Allow-Headers",
-                   "Access-Control-Allow-Origin",
-                   "Authorization"],
+    allow_methods=["GET", "POST", "OPTIONS", "DELETE", "PATCH", "PUT"],
+    allow_headers=[
+        "Content-Type",
+        "Set-Cookie",
+        "Access-Control-Allow-Headers",
+        "Access-Control-Allow-Origin",
+        "Authorization",
+    ],
 )
 
-admin = Admin(app, engine, authentication_backend = authentication_backend)
+admin = Admin(app, engine, authentication_backend=authentication_backend)
 
 admin.add_view(UsersAdmin)
 admin.add_view(PostsAdmin)
+
