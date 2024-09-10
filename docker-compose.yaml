@@ -1,0 +1,55 @@
+version: "3.8"
+services:
+    db:
+    image: postgres:15
+    container_name: postgres_container
+    volumes:
+      - postgresdata:/var/lib/postgresql/data
+    env_file:
+      - .env:
+      
+    kyber:
+      build: .
+      container_name: kyber_container
+      env_file:
+      - .env:
+      depends_on:
+        - db
+        - redis
+      ports:
+        - 8080
+
+    redis:
+      image: redis:latest
+      env_file:
+      - .env:
+      ports:
+        - 6379
+
+    celery:
+      image: kyber_celery
+      build:
+        context: . 
+      container_name: kyber_celery
+      command: ["celery","--app=app.tasks.celery:celery" ,"worker", "-l", "INFO"] 
+      env_file:
+        - .env:
+      depends_on:
+        - redis
+
+    flower:
+      image: kyber_flower
+      build:
+        context: .
+      container_name: kyber_flower
+      command: ["celery","--app=app.tasks.celery:celery" ,"flower"] 
+      env_file:
+        - .env:
+      depends_on:
+        - redis
+      ports:
+        - 5555
+    
+
+    volumes:
+      postgresdata:
