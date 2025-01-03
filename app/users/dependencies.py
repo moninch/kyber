@@ -4,9 +4,7 @@ from fastapi import Depends, Request
 from jose import JWTError, jwt
 
 from app.config import settings
-from app.exceptions import (
-    TokenAbsent, TokenExpired, UserNotFound
-)
+from app.exceptions import TokenAbsent, TokenExpired, UserNotFound
 from app.users.dao import UsersDAO
 from app.users.models import Users
 
@@ -21,9 +19,7 @@ def get_token(request: Request) -> str:
 
 async def get_current_user(token: str = Depends(get_token)) -> Users:
     try:
-        payload = jwt.decode(
-            token, settings.SECRET_KEY, settings.ALGORITHM
-        )
+        payload = jwt.decode(token, settings.SECRET_KEY, settings.ALGORITHM)
 
     except JWTError:
         raise TokenAbsent
@@ -41,7 +37,3 @@ async def get_current_user(token: str = Depends(get_token)) -> Users:
         raise UserNotFound
 
     return user
-
-
-async def get_current_admin_user(current_user: Users = Depends(get_current_user)) -> list[Users]:
-    return await UsersDAO.find_all()
