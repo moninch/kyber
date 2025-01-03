@@ -8,7 +8,7 @@ from app.users.auth import (
     verify_password,
 )
 from app.users.dao import UsersDAO
-from app.users.dependencies import get_current_admin_user, get_current_user
+from app.users.dependencies import get_current_user
 from app.users.models import Users
 from app.users.schemas import SUserAuth
 
@@ -48,6 +48,5 @@ async def read_users_me(current_user: Users = Depends(get_current_user)):
 
 
 @router.get("/all")
-async def read_users_all(current_user: Users = Depends(get_current_admin_user)):
+async def read_users_all(current_user: Users = Depends(get_current_user)):
     return current_user
-

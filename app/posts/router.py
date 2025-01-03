@@ -1,4 +1,3 @@
-
 from typing import Literal
 
 from fastapi import APIRouter, Depends, HTTPException, status
@@ -15,7 +14,6 @@ from app.posts.schemas import SPost
 from app.users.auth import password_get_hash
 from app.users.dependencies import get_current_user
 from app.users.models import Users
-from fastapi_cache.decorator import cache
 
 
 router = APIRouter(
@@ -41,14 +39,14 @@ async def create_post(
 async def get_posts_by_user(author_id: int):
     return await PostsDAO.find_all(author_id=author_id)
 
+
 @router.get("/my_posts")
-@cache(expire=60)
 async def get_my_posts(current_user: Users = Depends(get_current_user)):
     return await PostsDAO.find_all(author_id=current_user.id)
 
+
 # Просмотр вообще всех постов
 @router.get("/all")
-@cache(expire=60)
 async def get_all_posts():
     return await PostsDAO.find_all()
 
@@ -72,4 +70,3 @@ async def delete_bookings(post_id: int, user: Users = Depends(get_current_user))
         raise TokenAbsent
 
     await PostsDAO.delete_by_id(post_id)
-
